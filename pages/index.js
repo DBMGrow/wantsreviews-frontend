@@ -21,9 +21,9 @@ export default function ExamplePage() {
       <p className="text-sm">your url is {subdomain ? subdomain + "." : null}wantsreviews.com</p>
       <p className="text-sm mt-2">
         try going to{" "}
-        <a className="text-amber-500 font-bold" href={randomWord + ".wantsreviews.com"}>
+        <Link className="text-amber-500 font-bold" href={"https://" + randomWord + ".wantsreviews.com"}>
           {randomWord}.wantsreviews.com
-        </a>
+        </Link>
       </p>
     </main>
   )
