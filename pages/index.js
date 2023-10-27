@@ -10,10 +10,14 @@ export default function ExamplePage() {
   const router = useRouter()
   const subdomain = router.query.subdomain || ""
   const [randomWord, setRandomWord] = useState("")
+  const [ready, setReady] = useState(false)
 
   useEffect(() => {
     setRandomWord(randomWords[Math.floor(Math.random() * randomWords.length)])
-  }, [router])
+    if (!ready && router.isReady) setReady(true)
+  }, [ready, router])
+
+  if (!ready) return null
 
   return (
     <main className={`w-screen h-screen p-2 sm:p-24 ${inter.className}`}>
