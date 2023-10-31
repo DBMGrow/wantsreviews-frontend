@@ -1,34 +1,26 @@
 import { Inter } from "next/font/google"
 import { useRouter } from "next/router"
-import { randomWords } from "@/components/Utils/randomWords"
-import Link from "next/link"
 import { useState, useEffect } from "react"
+import MainCard from "@/components/UI/MainCard"
 
 const inter = Inter({ subsets: ["latin"] })
 
 export default function ExamplePage() {
   const router = useRouter()
   const subdomain = router.query.subdomain || ""
-  const [randomWord, setRandomWord] = useState("")
   const [ready, setReady] = useState(false)
 
   useEffect(() => {
-    setRandomWord(randomWords[Math.floor(Math.random() * randomWords.length)])
     if (!ready && router.isReady) setReady(true)
   }, [ready, router])
 
   if (!ready) return null
 
   return (
-    <main className={`w-screen h-screen p-2 sm:p-24 ${inter.className}`}>
-      <h1 className="text-3xl font-bold">{subdomain || "Home"}</h1>
-      <p className="text-sm">your url is {subdomain ? subdomain + "." : null}wantsreviews.com</p>
-      <p className="text-sm mt-2">
-        try going to{" "}
-        <Link className="text-amber-500 font-bold" href={"https://" + randomWord + ".wantsreviews.com"}>
-          {randomWord}.wantsreviews.com
-        </Link>
-      </p>
+    <main
+      className={`text-text w-screen h-screen flex items-center justify-center ${inter.className} bg-[url('/images/bg2.svg')]`}
+    >
+      <MainCard />
     </main>
   )
 }
