@@ -1,4 +1,5 @@
 import { makeFetch, isValidUrl } from "@davidcrammer/shotgun"
+import Cors from "cors"
 
 export const config = {
   api: {
@@ -6,7 +7,29 @@ export const config = {
   },
 }
 
+// Initializing the cors middleware
+const cors = Cors({
+  methods: ["GET", "POST"],
+  origin: true,
+})
+
+// Helper method to wait for a middleware to execute before continuing
+// And to throw an error if anything goes wrong
+function runMiddleware(req, res, fn) {
+  return new Promise((resolve, reject) => {
+    fn(req, res, (result) => {
+      if (result instanceof Error) {
+        return reject(result)
+      }
+      return resolve(result)
+    })
+  })
+}
+
 export default async function handler(req, res) {
+  // Run the middleware
+  await runMiddleware(req, res, cors)
+
   let { url } = req.query
 
   const method = req.method
