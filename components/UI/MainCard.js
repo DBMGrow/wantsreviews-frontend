@@ -1,10 +1,46 @@
 import useData from "./useData"
 import ProfileSection from "./ProfileSection"
-import { Card, CardBody } from "@nextui-org/react"
+import { Card, CardBody, Spinner } from "@nextui-org/react"
 import { motion } from "framer-motion"
 
 export default function MainCard() {
   const data = useData()
+
+  if (data.error || data?.rawData?.error) {
+    const error = data.error || data?.rawData?.error === "Slug does not exist." ? "bad slug" : "other"
+    return (
+      <Card className="rounded-2xl shadow-2xl bg-offWhite">
+        <CardBody>
+          <div ref={data.scope}></div>
+          {error === "bad slug" ? (
+            <div>
+              <h2 className="text-xl font-bold text-text-secondary">404</h2>
+              <p className="text-text-secondary">We could not find any data at this url.</p>
+            </div>
+          ) : (
+            <div>
+              <h2 className="text-xl font-bold text-text-secondary">An error has occurred.</h2>
+              <p className="text-text-secondary">We apologize for the inconvenience.</p>
+              <p className="text-text-secondary">Please try again later.</p>
+            </div>
+          )}
+        </CardBody>
+      </Card>
+    )
+  }
+
+  if (!data.rawData) {
+    return (
+      <>
+        <Card className="rounded-2xl shadow-2xl bg-offWhite">
+          <CardBody>
+            <div ref={data.scope}></div>
+            <Spinner />
+          </CardBody>
+        </Card>
+      </>
+    )
+  }
 
   return (
     <motion.div {...data.cardMotion}>

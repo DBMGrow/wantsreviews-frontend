@@ -22,7 +22,7 @@ export default function VideoStep({ ...data }) {
           <ReactPlayer url={data.videoUrl} width="100%" height="100%" onReady={handleIsReady} />
         </motion.div>
       </div>
-      <NextButton {...data} />
+      <NextButton id={0} {...data} />
     </>
   )
 }

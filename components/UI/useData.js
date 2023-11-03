@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react"
 import { useAnimate } from "framer-motion"
+import { useGet } from "@davidcrammer/shotgun"
+import { useRouter } from "next/router"
 
 import VideoStep from "./steps/01-VideoStep"
 import StarStep from "./steps/02-StarStep"
@@ -7,6 +9,8 @@ import FeedbackStep from "./steps/03-FeedbackStep"
 import ThankYouStep from "./steps/04-ThankYouStep"
 
 export default function useData() {
+  const router = useRouter()
+
   const [currentStep, setCurrentStep] = useState(0)
   const steps = [VideoStep, StarStep, FeedbackStep, ThankYouStep]
 
@@ -27,13 +31,23 @@ export default function useData() {
   //
   // Data Fetching Logic
   //
+  const url = router.isReady ? `agent&slug=${router?.query?.subdomain}` : null
+  const store = url ? "Data" : null
+  const { data: rawData, error } = useGet(store, true, { url })
 
-  data.videoUrl = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-  data.userName = "John Green"
+  data.rawData = rawData
+  data.error = error
+
+  data.agentID = rawData?.data?.Agent_ID
+  data.videoUrl = "https://www.youtube.com/watch?v=dQw4w9WgXcQ" //
+  data.userName = rawData?.data?.Agent_Name
+  data.userTitle = rawData?.data?.Company_Name
   data.userImage =
-    "https://images.unsplash.com/photo-1566492031773-4f4e44671857?auto=format&fit=crop&q=80&w=500&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    "https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?auto=format&fit=crop&q=80&w=540&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+  data.minRating = 5
+  data.redirectLink = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 
-  const [rating, setRating] = useState(0)
+  const [rating, setRating] = useState(5)
 
   data.rating = rating
   data.setRating = setRating
@@ -48,8 +62,11 @@ export default function useData() {
   //
 
   data.handleButtonClick = () => {
-    //set current step to the next step or highest step
     setCurrentStep((prev) => (prev === steps.length - 1 ? prev : prev + 1))
+  }
+
+  data.handleBackClick = () => {
+    setCurrentStep((prev) => (prev === 0 ? prev : prev - 1))
   }
 
   //

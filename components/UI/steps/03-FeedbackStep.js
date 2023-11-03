@@ -22,7 +22,7 @@ export default function FeedbackStep({ ...data }) {
         <h2 className="font-bold text-text text-lg mb-2">Feedback</h2>
         <Textarea {...fieldProps} onChange={handleTextChange} value={data.message} />
       </div>
-      <NextButton label="Submit" {...data} />
+      <NextButton id={2} label="Submit" {...data} />
     </>
   )
 }

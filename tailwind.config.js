@@ -31,7 +31,7 @@ module.exports = {
             offWhite: "#f7f7f7",
             black: "#535960",
             primary: "#22BD71",
-            secondary: "#1B664E",
+            secondary: "#4f505f",
             tertiary: "#24C475",
             success: "#BDCBA7",
             warning: "#E2CC90",
