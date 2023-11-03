@@ -33,7 +33,11 @@ export default function useData() {
   //
   const url = router.isReady ? `agent&slug=${router?.query?.subdomain}` : null
   const store = url ? "Data" : null
-  const { data: rawData, error } = useGet(store, true, { url })
+  const { data: rawData, error } = useGet(store, true, {
+    url,
+    debug: true,
+    proxyUrl: process.env.NEXT_PUBLIC_PROXY_URL,
+  })
 
   data.rawData = rawData
   data.error = error
