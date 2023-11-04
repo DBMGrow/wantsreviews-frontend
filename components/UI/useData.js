@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { useAnimate } from "framer-motion"
-import { useGet } from "@davidcrammer/shotgun"
+import { useGet, useTrigger } from "@davidcrammer/shotgun"
 import { useRouter } from "next/router"
 
 import VideoStep from "./steps/01-VideoStep"
@@ -35,9 +35,29 @@ export default function useData() {
   const store = url ? "Data" : null
   const { data: rawData, error } = useGet(store, true, {
     url,
-    debug: true,
     proxyUrl: process.env.NEXT_PUBLIC_PROXY_URL,
   })
+
+  const [submitting, setSubmitting] = useState(false)
+  const encodedUrl = encodeURIComponent(`review&slug=${router?.query?.subdomain}`)
+
+  const submitUrl = router.isReady ? `${process.env.NEXT_PUBLIC_PROXY_URL}?url=${encodedUrl}` : "/"
+  const submit = useTrigger(submitUrl, "POST", {
+    proxy: false,
+    onSuccess: (data) => {
+      setSubmitting(false)
+      setCurrentStep(3)
+      console.log(data)
+    },
+    onError: (error) => {
+      setSubmitting(false)
+      setCurrentStep(3)
+      console.error(error)
+    },
+  })
+  data.submit = submit
+  data.submitting = submitting
+  data.setSubmitting = setSubmitting
 
   data.rawData = rawData
   data.error = error
@@ -52,14 +72,43 @@ export default function useData() {
   data.redirectLink = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 
   const [rating, setRating] = useState(5)
-
   data.rating = rating
   data.setRating = setRating
 
   const [message, setMessage] = useState("")
-
   data.message = message
   data.setMessage = setMessage
+
+  const [nameFirst, setNameFirst] = useState("")
+  data.nameFirst = nameFirst
+  data.setNameFirst = setNameFirst
+
+  const [nameLast, setNameLast] = useState("")
+  data.nameLast = nameLast
+  data.setNameLast = setNameLast
+
+  const [email, setEmail] = useState("")
+  data.email = email
+  data.setEmail = setEmail
+
+  const [phone, setPhone] = useState("")
+  data.phone = phone
+  data.setPhone = setPhone
+
+  data.handleSubmit = () => {
+    console.log("submitting")
+    if (submitting) return
+    setSubmitting(true)
+    submit({
+      Agent_ID: data.agentID,
+      Name_First: nameFirst,
+      Name_Last: nameLast,
+      Email: email,
+      Phone: phone,
+      Message: message,
+      Rating: rating,
+    })
+  }
 
   //
   // Next Step Button Logic

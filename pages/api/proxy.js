@@ -4,6 +4,7 @@ import Cors from "cors"
 export const config = {
   api: {
     externalResolver: true,
+    bodyParser: false,
   },
 }
 
@@ -44,10 +45,10 @@ export default async function handler(req, res) {
   }
 
   const headers = {
-    //"Content-Type": "application/json",
+    "Content-Type": "",
   }
 
-  const request = await makeFetch(url, method, { data, headers })
+  const request = await makeFetch(url, method, { data, headers, debug: true })
 
   if (!request.error) {
     res.status(200).json(request)
