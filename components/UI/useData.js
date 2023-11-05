@@ -63,13 +63,12 @@ export default function useData() {
   data.error = error
 
   data.agentID = rawData?.data?.Agent_ID
-  data.videoUrl = "https://www.youtube.com/watch?v=dQw4w9WgXcQ" //
+  data.videoUrl = rawData?.data?.wrv?.Video_URL
   data.userName = rawData?.data?.Agent_Name
   data.userTitle = rawData?.data?.Company_Name
-  data.userImage =
-    "https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?auto=format&fit=crop&q=80&w=540&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-  data.minRating = 5
-  data.redirectLink = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+  data.userImage = "data:image/png;base64," + rawData?.data?.Display_Photo
+  data.minRating = rawData?.data?.wrv?.StarMin
+  data.redirectLink = rawData?.data?.wrv?.Review_URL
 
   const [rating, setRating] = useState(5)
   data.rating = rating
