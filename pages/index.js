@@ -18,7 +18,7 @@ export default function ExamplePage() {
 
   return (
     <main
-      className={`text-text w-screen h-screen flex items-center justify-center ${inter.className} bg-[url('/images/bg2.svg')]`}
+      className={`text-text w-screen h-screen flex items-center justify-center ${inter.className} bg-[url('/images/bg2.svg')] bg-cover`}
     >
       <MainCard />
     </main>

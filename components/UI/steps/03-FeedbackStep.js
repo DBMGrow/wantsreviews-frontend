@@ -67,7 +67,7 @@ export default function FeedbackStep({ ...data }) {
         </div>
         <Textarea {...messageProps} />
       </div>
-      <NextButton id={2} isLoading={data.submitting} label="Submit" {...data} next={data.handleSubmit} />
+      <NextButton id={1} isLoading={data.submitting} label="Submit" {...data} next={data.handleSubmit} />
     </>
   )
 }

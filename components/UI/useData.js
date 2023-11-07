@@ -3,8 +3,7 @@ import { useAnimate } from "framer-motion"
 import { useGet, useTrigger } from "@davidcrammer/shotgun"
 import { useRouter } from "next/router"
 
-import VideoStep from "./steps/01-VideoStep"
-import StarStep from "./steps/02-StarStep"
+import VideoStarStep from "./steps/01-VideoStarStep"
 import FeedbackStep from "./steps/03-FeedbackStep"
 import ThankYouStep from "./steps/04-ThankYouStep"
 
@@ -12,7 +11,7 @@ export default function useData() {
   const router = useRouter()
 
   const [currentStep, setCurrentStep] = useState(0)
-  const steps = [VideoStep, StarStep, FeedbackStep, ThankYouStep]
+  const steps = [VideoStarStep, FeedbackStep, ThankYouStep]
 
   const [scope, animate] = useAnimate()
 
@@ -46,12 +45,12 @@ export default function useData() {
     proxy: false,
     onSuccess: (data) => {
       setSubmitting(false)
-      setCurrentStep(3)
+      setCurrentStep(2)
       console.log(data)
     },
     onError: (error) => {
       setSubmitting(false)
-      setCurrentStep(3)
+      setCurrentStep(2)
       console.error(error)
     },
   })
@@ -140,6 +139,7 @@ export default function useData() {
     initial: { opacity: 0 },
     animate: { opacity: 1 },
     transition: { duration: 1, delay: 0.3 },
+    className: "w-full h-full flex items-center justify-center flex-col gap-2",
   }
 
   return data
