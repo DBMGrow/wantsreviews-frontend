@@ -1,10 +1,11 @@
 import { makeFetch, isValidUrl } from "@davidcrammer/shotgun"
+import convertToFormData from "@/components/Utils/convertToFormData"
+import axios from "axios"
 import Cors from "cors"
 
 export const config = {
   api: {
     externalResolver: true,
-    bodyParser: false,
   },
 }
 
@@ -34,7 +35,7 @@ export default async function handler(req, res) {
   let { url } = req.query
 
   const method = req.method
-  const data = req.body
+  const data = convertToFormData(req.body)
 
   if (!url) return res.status(400).json({ error: "Invalid URL" })
   url = process.env.API_ROUTE + "/?endpoint=" + url + "&api_key=" + process.env.API_KEY
@@ -44,15 +45,18 @@ export default async function handler(req, res) {
     })
   }
 
-  const headers = {
-    "Content-Type": "",
-  }
+  const response = await axios({
+    method,
+    url,
+    data,
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  })
 
-  const request = await makeFetch(url, method, { data, headers, debug: true })
-
-  if (!request.error) {
-    res.status(200).json(request)
+  if (!response?.data?.error) {
+    res.status(200).json(response.data)
   } else {
-    res.status(400).json(request)
+    res.status(400).json(response.data)
   }
 }

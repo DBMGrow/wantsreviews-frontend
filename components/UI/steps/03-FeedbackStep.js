@@ -1,5 +1,7 @@
 import NextButton from "../NextButton"
 import { Textarea, Input } from "@nextui-org/react"
+import { useState, useEffect } from "react"
+import * as EmailValidator from "email-validator"
 
 export default function FeedbackStep({ ...data }) {
   const handleFirstName = (e) => data.setNameFirst(e.target.value)
@@ -7,6 +9,8 @@ export default function FeedbackStep({ ...data }) {
   const handleEmail = (e) => data.setEmail(e.target.value)
   const handlePhone = (e) => data.setPhone(e.target.value)
   const handleMessage = (e) => data.setMessage(e.target.value)
+
+  const [isDisabled, setIsDisabled] = useState(true)
 
   const inputProps = {
     classNames: {
@@ -53,6 +57,13 @@ export default function FeedbackStep({ ...data }) {
     value: data.message,
   }
 
+  useEffect(() => {
+    if (!data.nameFirst || !data.nameLast) return setIsDisabled(true)
+    if (!data.email && !data.phone) return setIsDisabled(true)
+    if (data.email && !EmailValidator.validate(data.email)) return setIsDisabled(true)
+    setIsDisabled(false)
+  }, [data])
+
   return (
     <>
       <div className="flex-grow w-full flex items-center justify-center flex-col gap-2">
@@ -67,7 +78,14 @@ export default function FeedbackStep({ ...data }) {
         </div>
         <Textarea {...messageProps} />
       </div>
-      <NextButton id={1} isLoading={data.submitting} label="Submit" {...data} next={data.handleSubmit} />
+      <NextButton
+        id={1}
+        isLoading={data.submitting}
+        isDisabled={isDisabled}
+        label="Submit"
+        {...data}
+        next={data.handleSubmit}
+      />
     </>
   )
 }
