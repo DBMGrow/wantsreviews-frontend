@@ -7,8 +7,11 @@ import { motion } from "framer-motion"
 export default function MainCard() {
   const data = useData()
 
-  if (data.error || data?.rawData?.error) {
-    const error = data.error || data?.rawData?.error === "Slug does not exist." ? "bad slug" : "other"
+  if (data.error || data?.rawData?.error || data?.rawData?.data?.wrv?.Active === 0) {
+    let error = "other"
+    if (data?.rawData?.error === "Slug does not exist.") error = "bad slug"
+    if (data?.rawData?.data?.wrv?.Active === 0) error = "inactive"
+
     return (
       <Card className="rounded-2xl shadow-2xl bg-offWhite">
         <CardBody>
@@ -18,13 +21,21 @@ export default function MainCard() {
               <h2 className="text-xl font-bold text-text-secondary">404</h2>
               <p className="text-text-secondary">We could not find any data at this url.</p>
             </div>
-          ) : (
+          ) : null}
+          {error === "inactive" ? (
+            <div>
+              <h2 className="text-xl font-bold text-text-secondary">Inactive Account</h2>
+              <p className="text-text-secondary">This WantsReviews account has been deactivated.</p>
+              <p className="text-text-secondary">If you are the account owner, please contact support.</p>
+            </div>
+          ) : null}
+          {error === "other" ? (
             <div>
               <h2 className="text-xl font-bold text-text-secondary">An error has occurred.</h2>
               <p className="text-text-secondary">We apologize for the inconvenience.</p>
               <p className="text-text-secondary">Please try again later.</p>
             </div>
-          )}
+          ) : null}
         </CardBody>
       </Card>
     )
@@ -47,7 +58,7 @@ export default function MainCard() {
     <>
       <Head>
         <title>{data.userName} Wants Reviews</title>
-        <link rel="icon" href={data.userImage || "/images/star-solid.png"} />
+        <link rel="shortcut icon" href="/favicon.ico" />
       </Head>
       <motion.div {...data.cardMotion}>
         <Card className="w-full min-h-full sm:w-[550px] sm:min-h-[650px] p-7 max-w-full flex rounded-2xl shadow-2xl bg-offWhite">
